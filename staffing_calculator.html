@@ -451,7 +451,7 @@
         <span class="out" id="rate-out">12 000</span>
       </div>
       <div class="param-row">
-        <label for="tax">Налоги на ЗП</label>
+        <label for="tax">Налоги и отчисления</label>
         <input type="range" min="0" max="40" value="27" step="1" id="tax" />
         <span class="out" id="tax-out">27%</span>
       </div>
@@ -708,7 +708,7 @@
         <span class="staff-num">${idx + 1}</span>
         <select class="role-select">${roleOpts}</select>
         <select class="level-select">${levelOpts}</select>
-        <span class="staff-salary">${salary} млн сум/мес</span>
+        <span class="staff-salary">${salary} млн сум/мес на руки</span>
         <button class="btn-remove" title="Удалить">×</button>
       `;
 
@@ -767,14 +767,15 @@
     }
 
     const staffRows = r.staff.map(s =>
-      `<div class="row"><span class="label">${ROLE_NAMES[s.role]} (${LEVEL_NAMES[s.level].toLowerCase()})</span><span class="val">${SALARIES[s.role][s.level]} млн сум/мес</span></div>`
+      `<div class="row"><span class="label">${ROLE_NAMES[s.role]} (${LEVEL_NAMES[s.level].toLowerCase()})</span><span class="val">${SALARIES[s.role][s.level]} млн сум/мес на руки</span></div>`
     ).join('');
 
     detail.innerHTML = `
-      <p class="section-header">Зарплаты новых (gross + ${tax}% налогов)</p>
+      <p class="section-header">Зарплаты новых (на руки + ${tax}% налогов и отчислений)</p>
       ${staffRows}
-      <div class="row"><span class="label">Сумма ЗП в месяц</span><span class="val">${r.salaryMlnSum} млн сум → $${fmt(r.salaryMonthlyUSD)}</span></div>
-      <div class="row"><span class="label">ЗП за год</span><span class="val">$${fmt(r.salaryYearUSD)}</span></div>
+      <div class="row"><span class="label">Сумма ЗП на руки в месяц</span><span class="val">${r.salaryMlnSum} млн сум → $${fmt(r.salaryMonthlyUSD / (1 + tax / 100))}</span></div>
+      <div class="row"><span class="label">Полная стоимость для компании в месяц</span><span class="val">$${fmt(r.salaryMonthlyUSD)}</span></div>
+      <div class="row"><span class="label">ЗП за год (полная стоимость)</span><span class="val">$${fmt(r.salaryYearUSD)}</span></div>
 
       <p class="section-header">CAPEX и обучение (разово)</p>
       <div class="row"><span class="label">Компьютеры (${r.n} × $500)</span><span class="val">$${fmt(r.n * COMP)}</span></div>
